@@ -4,7 +4,7 @@ protocol SearchViewControllerProtocol: UITextFieldDelegate, UICollectionViewDele
     func searchButtonTapped(mealName: String)
 }
 
-class SearchViewController: UIViewController, SearchViewControllerProtocol {
+final class SearchViewController: UIViewController, SearchViewControllerProtocol {
     private var searchResults: [Meal] = []
     private let api = APIModel.shared
     weak var mainView: SearchView! {
@@ -15,13 +15,19 @@ class SearchViewController: UIViewController, SearchViewControllerProtocol {
         super.viewDidLoad()
         navigationItem.title = "Search recipes"
         navigationItem.backButtonTitle = ""
-        mainView.startSearch()
+        
         dismissKeyboard()
     }
     
 
     override func loadView() {
         self.view = SearchView(delegate: self)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        mainView.startSearch()
+        
     }
 
 }
@@ -51,8 +57,8 @@ extension SearchViewController {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! SearchCell
-        let recipeVC = RecipeViewController(meal: searchResults[indexPath.item], image: cell.imageBackground.image!)
+//        let recipeVC = RecipeViewController(meal: searchResults[indexPath.item], image: cell.imageBackground.image!)
+        let recipeVC = RecipeViewController(mealID: searchResults[indexPath.item].idMeal!)
         navigationController?.pushViewController(recipeVC, animated: true)
     }
     
@@ -61,6 +67,7 @@ extension SearchViewController {
 //MARK: - Search Meals Functions
 extension SearchViewController {
     func searchButtonTapped(mealName: String) {
+        mainView.headingLabel.text = "Search Result"
         api.getMealByName(mealName: mealName) { meals in
             self.searchResults = meals
             print(self.searchResults.count)
@@ -69,5 +76,10 @@ extension SearchViewController {
                 self.mainView.searchCountLabel.text = "\(meals.count) results"
             }
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        mainView.buttonTapped()
+        return true
     }
 }

@@ -117,7 +117,7 @@ class HomeView: UIView {
         colView.translatesAutoresizingMaskIntoConstraints = false
         colView.heightAnchor.constraint(equalToConstant: 51.0).isActive = true
         colView.dataSource = delegate
-        //        colView.register(TagCell.self, forCellWithReuseIdentifier: "TagCell")
+        colView.delegate = delegate
         return colView
     }()
     

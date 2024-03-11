@@ -90,7 +90,7 @@ final class RecipeView: UIView {
             instructionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
             instructionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
             instructionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
-            instructionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 32),
+            instructionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
         ])
         return view
     }()

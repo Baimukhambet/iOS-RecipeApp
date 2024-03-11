@@ -103,8 +103,15 @@ class SearchView: UIView {
         colView.dataSource = delegate
         colView.register(SearchCell.self, forCellWithReuseIdentifier: SearchCell.description())
         colView.translatesAutoresizingMaskIntoConstraints = false
+        colView.showsVerticalScrollIndicator = false
         return colView
     }()
+    
+    func buttonTapped() {
+        print("Tapped")
+        delegate.searchButtonTapped(mealName: searchField.text ?? "")
+        searchField.resignFirstResponder()
+    }
     
     
     //MARK: - Setup
@@ -148,11 +155,7 @@ private extension SearchView {
         ])
     }
     
-    func buttonTapped() {
-        print("Tapped")
-        delegate.searchButtonTapped(mealName: searchField.text ?? "")
-        searchField.resignFirstResponder()
-    }
+
 }
 
 //MARK: -Delegate methods

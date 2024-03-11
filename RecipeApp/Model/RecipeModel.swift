@@ -41,3 +41,11 @@ class Meal: NSObject, Decodable {
 struct MealsResponse: Decodable {
     let meals: [Meal]
 }
+
+struct MiniMeal: Decodable {
+    let strMeal: String
+    let strMealThumb: String
+    let idMeal: String
+}
+
+
