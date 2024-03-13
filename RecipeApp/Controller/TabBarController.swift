@@ -22,7 +22,7 @@ final class TabBarController: UITabBarController {
     }()
     
     @objc private func btnTapped() {
-        print("buttonTapped")
+//        print("buttonTapped")
     }
     
     override func viewDidLoad() {
@@ -107,7 +107,7 @@ final class TabBarController: UITabBarController {
     
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         if item.tag == 2 {
-            print("middleItemTapped")
+//            print("middleItemTapped")
         }
     }
 

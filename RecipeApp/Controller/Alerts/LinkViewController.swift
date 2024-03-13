@@ -2,6 +2,7 @@ import UIKit
 
 final class LinkViewController: UIViewController {
     private let link: String
+    var completion: (() -> ())?
     
     init(link: String) {
         self.link = link
@@ -58,6 +59,8 @@ final class LinkViewController: UIViewController {
         btn.setTitleColor(.white, for: .normal)
         btn.layer.cornerRadius = 9
         btn.translatesAutoresizingMaskIntoConstraints = false
+        
+        btn.addAction(UIAction{ _ in self.copyButtonTapped()}, for: .touchUpInside)
         return btn
     }()
     
@@ -65,9 +68,9 @@ final class LinkViewController: UIViewController {
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "xmark")?.withTintColor(.init(hex: "#484848FF")!, renderingMode: .alwaysOriginal), for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 6).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 6).isActive = true
-        
+        btn.widthAnchor.constraint(equalToConstant: 9).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 9).isActive = true
+        btn.addAction(UIAction{[weak self] _ in self?.completion!(); print("Removing shareVC...")}, for: .touchUpInside)
         return btn
     }()
 
@@ -119,5 +122,50 @@ private extension LinkViewController {
             copyButton.trailingAnchor.constraint(equalTo: linkBackView.trailingAnchor),
             copyButton.widthAnchor.constraint(equalTo: linkBackView.widthAnchor, multiplier: 0.33)
         ])
+    }
+    
+    func copyButtonTapped() {
+        UIPasteboard.general.string = self.link
+        
+        showCopiedAlert()
+    }
+    
+    func showCopiedAlert() {
+        if let pView = parent?.view {
+            let label = UILabel()
+            label.backgroundColor = .init(hex: "#D9D9D9FF")
+            label.layer.cornerRadius = 12
+            label.clipsToBounds = true
+            print(label.intrinsicContentSize)
+            
+            label.text = "Copied"
+            print(floor(label.intrinsicContentSize.width))
+        
+            
+            label.textColor = .black
+            label.textAlignment = .center
+//            label.translatesAutoresizingMaskIntoConstraints = false
+            
+            
+            
+            pView.addSubview(label)
+            label.frame = CGRect(x: CGFloat(Int(pView.center.x - 50)), y: -20, width: 100, height: 60)
+            
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut) {
+                label.frame = CGRect(x: CGFloat(pView.center.x - 50), y: 80, width: 100, height: 60)
+            } completion: { finished in
+                if finished {
+                    UIView.animate(withDuration: 1.0, delay: 1.0) {
+                        label.layer.opacity = 0.0
+
+                    } completion: { finished in
+                        label.removeFromSuperview()
+                    }
+                }
+            }
+            
+            
+        }
+        
     }
 }

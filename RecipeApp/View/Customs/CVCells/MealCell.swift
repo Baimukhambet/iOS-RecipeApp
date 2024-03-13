@@ -7,7 +7,11 @@
 
 import UIKit
 
-class MealCell: UICollectionViewCell {
+final class MealCell: UICollectionViewCell {
+    
+    //MARK: - Subviews
+    lazy var activityInd = UIActivityIndicatorView()
+    
     lazy var background: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(hex: "#D9D9D9FF")
@@ -18,7 +22,7 @@ class MealCell: UICollectionViewCell {
     
     lazy var mealImage: RoundUIImageView = {
         let imgView = RoundUIImageView()
-        imgView.backgroundColor = .black
+        imgView.backgroundColor = UIColor(hex: "#D9D9D9FF")
         imgView.translatesAutoresizingMaskIntoConstraints = false
         return imgView
     }()
@@ -47,11 +51,12 @@ class MealCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 11, weight: .bold)
         label.textColor = UIColor(hex: "#484848FF")
-        label.text = "15 Min"
+        label.text = "\(Int.random(in: 15...30)) Min"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
+    //MARK: - Functions
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setupViews()
@@ -96,6 +101,25 @@ class MealCell: UICollectionViewCell {
     func setData(mealImage: UIImage, title: String) {
         self.mealImage.image = mealImage
         self.mealTitleLabel.text = title
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        mealImage.image = nil
+    }
+    
+    func addActivityIndicator() {
+        activityInd.translatesAutoresizingMaskIntoConstraints = false
+        mealImage.addSubview(activityInd)
+        NSLayoutConstraint.activate([
+            activityInd.centerXAnchor.constraint(equalTo: mealImage.centerXAnchor),
+            activityInd.centerYAnchor.constraint(equalTo: mealImage.centerYAnchor),
+        ])
+        activityInd.startAnimating()
+    }
+    
+    func removeActivityInd() {
+        activityInd.removeFromSuperview()
     }
     
     

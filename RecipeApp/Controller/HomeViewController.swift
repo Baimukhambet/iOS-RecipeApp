@@ -31,7 +31,7 @@ final class HomeViewController: UIViewController, HomeViewControllerProtocol {
     
     func searchTapped(mealName: String) {
         api.getMealByName(mealName: mealName) { meals in
-            print(meals)
+//            print(meals)
         }
     }
     
@@ -98,9 +98,11 @@ extension HomeViewController {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MealCell.description(), for: indexPath) as! MealCell
             let meal = meals[indexPath.item]
             let op = ImageLoadOperation(url: URL(string: meal.strMealThumb!)!)
+            cell.addActivityIndicator()
             op.completionBlock = {
                 DispatchQueue.main.async {
-                    cell.mealImage.image = op.image ?? UIImage(systemName: "house.fill")
+                    cell.removeActivityInd()
+                    cell.mealImage.image = op.image ?? UIImage()
                 }
             }
             queue.addOperation(op)

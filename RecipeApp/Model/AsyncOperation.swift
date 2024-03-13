@@ -57,13 +57,13 @@ class ImageLoadOperation: AsyncOperation {
             defer { self?.state = .finished }
             guard let self = self else { return }
             if isCancelled {
-                print("Cancelling Loading of Image")
+//                print("Cancelling Loading of Image")
                 return
             }
             if error == nil, let data = data {
                 image = UIImage(data: data)
             } else {
-                print("Error loading")
+//                print(error!.localizedDescription)
             }
             
         }

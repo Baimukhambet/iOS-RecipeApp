@@ -14,14 +14,23 @@ final class RecipeViewController: UIViewController, RecipeViewDelegate {
     var meal: Meal?
     var image: UIImage?
     let mealID: String
+    var isMenuOpened = false
     
-    lazy var shareAction = UIAction(title: "Share", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .mixed) {_ in
+    lazy var shareAction = UIAction(title: "Share", image: UIImage(systemName: "arrowshape.turn.up.left.fill")) {_ in
         self.presentShareVC()
     }
     
+    lazy var saveAction = UIAction(title: "Save", image: UIImage(systemName:"bookmark.fill")) {_ in}
+    
     lazy var menu: UIMenu = {
-        let menu = UIMenu(children: [shareAction])
+        let menu = UIMenu(children: [shareAction, saveAction])
         return menu
+    }()
+    
+    lazy var blackOverlayView: UIView = {
+        let view = UIView(frame: self.recipeView.bounds)
+        view.backgroundColor = .black.withAlphaComponent(0.5)
+        return view
     }()
     
     //MARK: - init
@@ -81,8 +90,28 @@ final class RecipeViewController: UIViewController, RecipeViewDelegate {
 //MARK: - Private functions
 private extension RecipeViewController {
     func setupRightBarButton() {
-//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: nil)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), primaryAction: nil, menu: menu)
+//        let button: UIButton = {
+//            let btn = UIButton()
+//            btn.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+//            btn.addAction(UIAction{ _ in
+//                let menuVC = UIMenuController.shared
+//                menuVC.showMenu(from: self.view, rect: self.navigationItem.rightBarButtonItem!.accessibilityFrame)
+//                print("We did it")
+//            }, for: .touchUpInside)
+//            btn.menu = menu
+//            return btn
+//        }()
+        let barButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), primaryAction: nil, menu: menu)
+//        barButtonItem.primaryAction = UIAction { _ in
+//            self.showMenu(for: barButtonItem)
+//        }
+//        barButtonItem.target = self
+//        barButtonItem.action = #selector(barButtonTapped)
+//        let barButtonItem = UIBarButtonItem(customView: button)
+//        barButtonItem.target = self
+//        barButtonItem.action = #selector(barButtonTapped)
+        
+        self.navigationItem.rightBarButtonItem = barButtonItem
     }
     
     func setup() {
@@ -135,9 +164,19 @@ private extension RecipeViewController {
     }
     
     func presentShareVC() {
+        addBlackOverlay()
         let shareVC = LinkViewController(link: meal!.idMeal!)
-        shareVC.willMove(toParent: self)
+        shareVC.completion = { [weak self] in
+            shareVC.willMove(toParent: nil)
+            shareVC.view.removeFromSuperview()
+            shareVC.removeFromParent()
+            
+            self?.removeBlackOverlay()
+        }
+        self.addChild(shareVC)
         recipeView.addSubview(shareVC.view)
+        shareVC.didMove(toParent: self)
+        
         NSLayoutConstraint.activate([
             shareVC.view.centerXAnchor.constraint(equalTo: recipeView.centerXAnchor),
             shareVC.view.centerYAnchor.constraint(equalTo: recipeView.centerYAnchor),
@@ -145,7 +184,30 @@ private extension RecipeViewController {
             shareVC.view.trailingAnchor.constraint(equalTo: recipeView.trailingAnchor, constant: -30),
         ])
         
-        recipeView.isUserInteractionEnabled = false
+//        recipeView.isUserInteractionEnabled = false
+//        shareVC.view.isUserInteractionEnabled = true
+    }
+    
+    func addBlackOverlay() {
+        recipeView.addSubview(blackOverlayView)
+    }
+    
+    func removeBlackOverlay() {
+        blackOverlayView.removeFromSuperview()
+    }
+    
+    @objc func barButtonTapped() {
+        isMenuOpened.toggle()
+        if isMenuOpened {
+            addBlackOverlay()
+        } else { removeBlackOverlay() }
+    }
+    
+    func showMenu(for barButtonItem:UIBarButtonItem) {
+        if let menu = barButtonItem.menu {
+            let menuController = UIMenuController.shared
+            menuController.showMenu(from: self.view, rect: barButtonItem.accessibilityFrame)
+        }
     }
     
 

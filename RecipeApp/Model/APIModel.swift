@@ -24,8 +24,8 @@ final class APIModel {
                     let decodedData = try decoder.decode(MealsResponse.self, from: data)
                     let meals = decodedData.meals
                     completion(meals)
-                } catch {
-                    print("Failed to decode.")
+                } catch let error {
+                    print("Failed to decode: \(error.localizedDescription)")
                     return
                 }
  
@@ -96,7 +96,6 @@ final class APIModel {
                 do {
                     let decodedData = try decoder.decode([String: [Meal]].self, from: data)
                     let meals = decodedData["meals"]!
-                    print(meals)
                     completion(meals)
                 } catch let error {
                     print(error.localizedDescription)

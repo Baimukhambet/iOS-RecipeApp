@@ -108,7 +108,7 @@ class SearchView: UIView {
     }()
     
     func buttonTapped() {
-        print("Tapped")
+//        print("Tapped")
         delegate.searchButtonTapped(mealName: searchField.text ?? "")
         searchField.resignFirstResponder()
     }

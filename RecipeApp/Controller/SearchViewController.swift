@@ -70,7 +70,7 @@ extension SearchViewController {
         mainView.headingLabel.text = "Search Result"
         api.getMealByName(mealName: mealName) { meals in
             self.searchResults = meals
-            print(self.searchResults.count)
+//            print(self.searchResults.count)
             DispatchQueue.main.async {
                 self.mainView.collectionView.reloadData()
                 self.mainView.searchCountLabel.text = "\(meals.count) results"
