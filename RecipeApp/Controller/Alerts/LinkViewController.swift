@@ -59,6 +59,8 @@ final class LinkViewController: UIViewController {
         btn.setTitleColor(.white, for: .normal)
         btn.layer.cornerRadius = 9
         btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.titleLabel!.font = .systemFont(ofSize: 11, weight: .semibold)
+        
         
         btn.addAction(UIAction{ _ in self.copyButtonTapped()}, for: .touchUpInside)
         return btn
@@ -73,14 +75,14 @@ final class LinkViewController: UIViewController {
         btn.addAction(UIAction{[weak self] _ in self?.completion!(); print("Removing shareVC...")}, for: .touchUpInside)
         return btn
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-
+        
     }
-
-
+    
+    
 }
 
 //MARK: - Private Functions
@@ -105,6 +107,7 @@ private extension LinkViewController {
             linkBackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
             linkBackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 10),
             linkBackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            linkBackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.25),
             
             closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
             closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
@@ -136,35 +139,26 @@ private extension LinkViewController {
             label.backgroundColor = .init(hex: "#D9D9D9FF")
             label.layer.cornerRadius = 12
             label.clipsToBounds = true
-            print(label.intrinsicContentSize)
-            
             label.text = "Copied"
-            print(floor(label.intrinsicContentSize.width))
-        
-            
             label.textColor = .black
             label.textAlignment = .center
-//            label.translatesAutoresizingMaskIntoConstraints = false
-            
-            
+            label.numberOfLines = 0
             
             pView.addSubview(label)
-            label.frame = CGRect(x: CGFloat(Int(pView.center.x - 50)), y: -20, width: 100, height: 60)
+            label.frame = CGRect(x: CGFloat(Int(pView.center.x - (label.intrinsicContentSize.width + 10) / 2)), y: -20, width: label.intrinsicContentSize.width + 20, height: label.intrinsicContentSize.height + 10)
             
-            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut) {
-                label.frame = CGRect(x: CGFloat(pView.center.x - 50), y: 80, width: 100, height: 60)
+            UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseOut) {
+                label.frame = CGRect(x: CGFloat(pView.center.x - (label.intrinsicContentSize.width + 10) / 2), y: 80, width: label.intrinsicContentSize.width + 20, height: label.intrinsicContentSize.height + 10)
             } completion: { finished in
                 if finished {
                     UIView.animate(withDuration: 1.0, delay: 1.0) {
                         label.layer.opacity = 0.0
-
+                        
                     } completion: { finished in
                         label.removeFromSuperview()
                     }
                 }
             }
-            
-            
         }
         
     }

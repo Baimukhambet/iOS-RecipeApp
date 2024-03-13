@@ -183,9 +183,6 @@ private extension RecipeViewController {
             shareVC.view.leadingAnchor.constraint(equalTo: recipeView.leadingAnchor, constant: 30),
             shareVC.view.trailingAnchor.constraint(equalTo: recipeView.trailingAnchor, constant: -30),
         ])
-        
-//        recipeView.isUserInteractionEnabled = false
-//        shareVC.view.isUserInteractionEnabled = true
     }
     
     func addBlackOverlay() {
